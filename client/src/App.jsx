@@ -4,10 +4,12 @@ import SignIn from "./pages/Signin/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
 import About from "./pages/About/About";
 import Profile from "./pages/Profile/Profile";
+import NavBar from "./components/NavBar/NavBar";
 
 const App = () => {
   return (
     <Router>
+      <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
