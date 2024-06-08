@@ -1,5 +1,6 @@
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
 
 export const singUp = async (req, res, next) => {
   try {
@@ -10,6 +11,6 @@ export const singUp = async (req, res, next) => {
     res.status(201).json({ message: "user created successfully" });
     console.log(req.body);
   } catch (error) {
-    res.status(500).json({ message: "Email already existed" });
+    next(errorHandler(500, "Email aready Existed"));
   }
 };
