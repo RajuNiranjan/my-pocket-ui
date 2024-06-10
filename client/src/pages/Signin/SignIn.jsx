@@ -7,6 +7,7 @@ import {
   signInFailure,
 } from "../../redux/user/userSlice";
 import OAuth from "../../components/OAuth/OAuth";
+import GoogleAuth from "../../components/GoogleAuth/GoogleAuth";
 
 const SignIn = () => {
   const [signInFormData, setSignInFormData] = useState({
@@ -85,7 +86,8 @@ const SignIn = () => {
             className="bg-blue-500 text-white font-medium text-lg cursor-pointer rounded-md p-2">
             {loading ? "Loading..." : "Sign In"}
           </button>
-          <OAuth />
+          {/* <OAuth /> */}
+          <GoogleAuth />
         </form>
         <p>
           Create an account?{" "}
