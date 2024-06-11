@@ -86,8 +86,8 @@ const SignIn = () => {
             className="bg-blue-500 text-white font-medium text-lg cursor-pointer rounded-md p-2">
             {loading ? "Loading..." : "Sign In"}
           </button>
-          {/* <OAuth /> */}
-          <GoogleAuth />
+          <OAuth />
+          {/* <GoogleAuth /> */}
         </form>
         <p>
           Create an account?{" "}
