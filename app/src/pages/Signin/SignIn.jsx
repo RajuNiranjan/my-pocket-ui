@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../../redux/user/userSlice";
 import OAuth from "../../components/OAuth/OAuth";
-import GoogleAuth from "../../components/GoogleAuth/GoogleAuth";
 
 const SignIn = () => {
   const [signInFormData, setSignInFormData] = useState({
@@ -15,9 +8,9 @@ const SignIn = () => {
     password: "",
   });
 
-  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -29,39 +22,12 @@ const SignIn = () => {
 
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
-
-    if (!signInFormData.email || !signInFormData.password) {
-      dispatch(signInFailure("please fill inall fields"));
-      return;
-    }
-
-    try {
-      dispatch(signInStart());
-      const res = await fetch("/api/auth/sign_in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signInFormData),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        dispatch(signInFailure(data.message));
-        return;
-      }
-
-      dispatch(signInSuccess(data));
-      navigate("/");
-    } catch (error) {
-      dispatch(signInFailure(error.message));
-    }
   };
 
   return (
     <div className="flex justify-center items-center w-full">
       <div className="w-[25%] flex flex-col my-20 justify-center items-center">
-        <h1 className="font-bold text-3xl">Sign In</h1>
+        <h1 className="font-bold text-3xl text-gray-500">Sign In</h1>
         <form
           onSubmit={handleSubmitSignIn}
           className="flex flex-col gap-4 my-10 w-full">
@@ -83,11 +49,10 @@ const SignIn = () => {
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white font-medium text-lg cursor-pointer rounded-md p-2">
+            className="bg-gray-500 hover:bg-gray-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
             {loading ? "Loading..." : "Sign In"}
           </button>
           <OAuth />
-          {/* <GoogleAuth /> */}
         </form>
         <p>
           Create an account?{" "}
