@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
+import axios from "axios";
 
 const SignUp = () => {
   const [signUpDetails, setSignUpDetails] = useState({
@@ -23,6 +24,22 @@ const SignUp = () => {
 
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
+    try {
+      const res = await axios.post("/api/auth/sign-up", signUpDetails);
+      if (!res.ok) {
+        return;
+      }
+      const data = res.data;
+      setSignUpDetails({
+        userName: "",
+        email: "",
+        password: "",
+      });
+      console.log("data", data);
+      navigate("/sign_in");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
