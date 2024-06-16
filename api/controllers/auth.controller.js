@@ -84,3 +84,58 @@ export const signIn = async (req, res, next) => {
       .json({ message: "Sign In Failure, Internal Server Error" });
   }
 };
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    const user = await userModel.findOne({ email: req.body.email });
+
+    if (user) {
+      const token = jwt.sign(
+        { userId: user._id, email: user.email },
+        process.env.SECRETE_KEY
+      );
+
+      const userResponse = {
+        _id: user._id,
+        userName: user.userName,
+        email: user.email,
+        avatar: user.avatar,
+      };
+
+      return res
+        .cookie("token", token, { httpOnly: true })
+        .status(200)
+        .json({ message: "User Sign In Successfully", user: userResponse });
+    }
+
+    const password = Math.random().toString(36).slice(-12);
+    const hashPassword = bcrypt.hashSync(password, 12);
+    const newUser = new userModel({
+      userName: req.body.userName,
+      email: req.body.email,
+      password: hashPassword,
+      avatar: req.body.avatar,
+    });
+
+    const token = jwt.sign(
+      { userId: newUser._id, email: newUser.email },
+      process.env.SECRETE_KEY
+    );
+
+    const userResponse = {
+      _id: newUser._id,
+      userName: newUser.userName,
+      email: newUser.email,
+      avatar: newUser.avatar,
+    };
+
+    return res
+      .cookie("token", token, { httpOnly: true })
+      .json({ message: "User Sign Up Successfully", user: userResponse });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Error With Google Authentication, Internal Server Error",
+    });
+  }
+};
