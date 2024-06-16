@@ -2,15 +2,16 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { authSuccess, authFailure, authStart } from "../../redux/Actions/user";
 
 const SignIn = () => {
   const [signInFormData, setSignInFormData] = useState({
     email: "",
     password: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -24,22 +25,31 @@ const SignIn = () => {
 
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+
+    dispatch(authStart());
     try {
       const res = await axios.post("/api/auth/sign-in", signInFormData);
+
+      if (!signInFormData.email || !signInFormData.password) {
+        return dispatch(authFailure(res.message));
+      }
+
       if (res.status !== 200) {
-        setError("Login failed. Please check your credentials.");
-        setLoading(false);
+        const errorMessage = res.data.message;
+        dispatch(
+          authFailure(errorMessage || "Sign In failure, Please try again")
+        );
         return;
       }
       const data = res.data;
+      dispatch(authSuccess(data));
       navigate("/");
       console.log(data);
     } catch (error) {
       console.log(error);
-      setLoading(false);
-      setError(error.message);
+      dispatch(
+        authFailure(error.response?.data?.message || "Internal Server Error")
+      );
     }
   };
 

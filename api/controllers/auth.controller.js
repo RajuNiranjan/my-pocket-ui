@@ -5,6 +5,11 @@ import jwt from "jsonwebtoken";
 export const signUp = async (req, res, next) => {
   try {
     const { userName, email, password } = req.body;
+
+    if (!userName || !email || !password) {
+      return res.status(400).json({ message: "Please Fill All The Fields" });
+    }
+
     const user = await userModel.findOne({ email });
     if (user) {
       return res
@@ -39,24 +44,36 @@ export const signUp = async (req, res, next) => {
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please Fill All The Fields" });
+    }
+
     const user = await userModel.findOne({ email });
-    const validPassword = bcrypt.compareSync(password, user.password);
+
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
+
+    const validPassword = bcrypt.compareSync(password, user.password);
+
     if (!validPassword) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.SECRETE_KEY
     );
+
     res.cookie("token", token, { httpOnly: true });
+
     const userResponse = {
       _id: user._id,
       email: user.email,
       password: user.password,
     };
+
     return res
       .status(200)
       .json({ message: "User Login Successfully", user: userResponse });

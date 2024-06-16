@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { authStart, authSuccess, authFailure } from "../../redux/Actions/user";
 
 const SignUp = () => {
   const [signUpDetails, setSignUpDetails] = useState({
@@ -9,9 +11,9 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const onChange = (e) => {
@@ -24,27 +26,34 @@ const SignUp = () => {
 
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+
+    dispatch(authStart());
     try {
       const res = await axios.post("/api/auth/sign-up", signUpDetails);
+      if (
+        !signUpDetails.userName ||
+        signUpDetails.email ||
+        signUpDetails.password
+      ) {
+        return dispatch(authFailure(res.message));
+      }
       if (res.status !== 201) {
-        setLoading(false);
-        setError("failed");
+        dispatch(authFailure("Sign Up Failed, Please try again"));
         return;
       }
       const data = res.data;
+      dispatch(authSuccess(data));
       setSignUpDetails({
         userName: "",
         email: "",
         password: "",
       });
-      console.log("data", data);
       navigate("/sign_in");
     } catch (error) {
       console.log(error);
-      setLoading(false);
-      setError(error.message);
+      dispatch(
+        authFailure(error.response?.data?.message || "Internal Server Error")
+      );
     }
   };
 
