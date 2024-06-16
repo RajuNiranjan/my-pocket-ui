@@ -3,11 +3,12 @@ import { app } from "../../fire_base";
 import axios from "axios";
 import { authFailure, authStart, authSuccess } from "../../redux/Actions/user";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const OAuth = () => {
   const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleContinueWithGoogle = async () => {
     dispatch(authStart());
     try {
@@ -24,6 +25,7 @@ const OAuth = () => {
 
       const data = res.data;
       dispatch(authSuccess(data));
+      navigate("/");
     } catch (error) {
       console.log(error);
       dispatch(authFailure(error.response?.data.message));
