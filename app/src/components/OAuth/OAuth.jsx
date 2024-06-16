@@ -40,7 +40,6 @@ const OAuth = () => {
         className="bg-red-500 hover:bg-red-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-500">
         {loading ? "Loading..." : "Continue With Google"}
       </button>
-      {error && <p className="text-red-500 my-5">{error}</p>}
     </>
   );
 };
