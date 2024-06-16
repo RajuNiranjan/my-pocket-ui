@@ -71,7 +71,7 @@ export const signIn = async (req, res, next) => {
     const userResponse = {
       _id: user._id,
       email: user.email,
-      password: user.password,
+      userName: user.userName,
     };
 
     return res
