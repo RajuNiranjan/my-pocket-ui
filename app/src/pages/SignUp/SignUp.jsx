@@ -24,9 +24,13 @@ const SignUp = () => {
 
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
       const res = await axios.post("/api/auth/sign-up", signUpDetails);
-      if (!res.ok) {
+      if (res.status !== 201) {
+        setLoading(false);
+        setError("failed");
         return;
       }
       const data = res.data;
@@ -39,6 +43,8 @@ const SignUp = () => {
       navigate("/sign_in");
     } catch (error) {
       console.log(error);
+      setLoading(false);
+      setError(error.message);
     }
   };
 

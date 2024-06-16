@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../../components/OAuth/OAuth";
+import axios from "axios";
 
 const SignIn = () => {
   const [signInFormData, setSignInFormData] = useState({
@@ -8,9 +9,10 @@ const SignIn = () => {
     password: "",
   });
 
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +24,23 @@ const SignIn = () => {
 
   const handleSubmitSignIn = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axios.post("/api/auth/sign-in", signInFormData);
+      if (res.status !== 200) {
+        setError("Login failed. Please check your credentials.");
+        setLoading(false);
+        return;
+      }
+      const data = res.data;
+      navigate("/");
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError(error.message);
+    }
   };
 
   return (
