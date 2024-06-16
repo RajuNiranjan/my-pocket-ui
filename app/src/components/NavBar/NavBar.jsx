@@ -1,22 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const path = useLocation();
-
-  const routesData = [
-    {
-      title: "Home",
-      path: "/",
-    },
-    {
-      title: "About",
-      path: "/about",
-    },
-    {
-      title: "SignIn",
-      path: "/sign_in",
-    },
-  ];
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <nav className="h-14 bg-gray-500 flex  items-center justify-between px-10">
@@ -29,21 +16,46 @@ const NavBar = () => {
         </Link>
       </div>
 
-      <div className="flex gap-4 font-medium">
-        {routesData?.map((item, index) => {
-          return (
-            <Link
-              to={item?.path}
-              key={index}
+      <div className="flex gap-4 font-medium items-center">
+        <Link
+          to="/"
+          className={`${
+            path?.pathname === "/"
+              ? "text-white font-semibold transition-all duration-500"
+              : "text-black transition-all duration-500"
+          }`}>
+          Home
+        </Link>
+        <Link
+          to="/about"
+          className={`${
+            path?.pathname === "/about"
+              ? "text-white font-semibold transition-all duration-500"
+              : "text-black transition-all duration-500"
+          }`}>
+          About
+        </Link>
+        {currentUser?.user ? (
+          <Link to="/profile">
+            <img
+              src={currentUser.user.avatar}
+              alt="user"
               className={`${
-                path?.pathname === item?.path
-                  ? "text-white font-semibold transition-all duration-500"
-                  : "text-black  transition-all duration-500"
-              }`}>
-              {item?.title}
-            </Link>
-          );
-        })}
+                path.pathname === "/profile" ? "border border-white " : ""
+              } w-7 h-7 rounded-full transition-all duration-300`}
+            />
+          </Link>
+        ) : (
+          <Link
+            to="/sign_in"
+            className={`${
+              path?.pathname === "/sign_in"
+                ? "text-white font-semibold transition-all duration-500"
+                : "text-black transition-all duration-500"
+            }`}>
+            Sign In
+          </Link>
+        )}
       </div>
     </nav>
   );
