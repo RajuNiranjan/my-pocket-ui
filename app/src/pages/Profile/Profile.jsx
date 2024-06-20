@@ -1,5 +1,11 @@
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../../redux/Actions/user";
 import {
   getDownloadURL,
   getStorage,
@@ -19,6 +25,8 @@ const Profile = () => {
   });
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+
+  const dispatch = useDispatch();
 
   const onInputChange = (e) => {
     const { id, value } = e.target;
@@ -61,11 +69,22 @@ const Profile = () => {
 
   const handleSubmitProfileForm = async (e) => {
     e.preventDefault();
+    dispatch(updateUserStart());
     try {
-      // Update profile information
+      const userId = currentUser._id;
+      const res = await axios.post(
+        `/api/user/updateUserInfo/${userId}`,
+        profileFormData
+      );
+
+      const data = res.data;
+
+      dispatch(updateUserSuccess(data));
+
       console.log(profileFormData);
     } catch (error) {
       console.log("Error updating profile:", error);
+      dispatch(updateUserFailure(error?.response?.data.message));
     }
   };
 

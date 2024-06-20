@@ -20,7 +20,7 @@ export const signUp = async (req, res, next) => {
     const newUser = new userModel({ userName, email, password: hashPassword });
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email },
-      process.env.SECRETE_KEY
+      process.env.SECRET_KEY
     );
     await newUser.save();
     res.cookie("token", token, { httpOnly: true });
@@ -63,7 +63,7 @@ export const signIn = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.SECRETE_KEY
+      process.env.SECRET_KEY
     );
 
     res.cookie("token", token, { httpOnly: true });
@@ -92,7 +92,7 @@ export const googleAuth = async (req, res, next) => {
     if (user) {
       const token = jwt.sign(
         { userId: user._id, email: user.email },
-        process.env.SECRETE_KEY
+        process.env.SECRET_KEY
       );
 
       const userResponse = {
@@ -119,7 +119,7 @@ export const googleAuth = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email },
-      process.env.SECRETE_KEY
+      process.env.SECRET_KEY
     );
 
     const userResponse = {
