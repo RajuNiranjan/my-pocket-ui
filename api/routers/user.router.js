@@ -1,7 +1,7 @@
 import express from "express";
-import { updateUserInfo } from "../controllers/user.controller.js";
-import { verifyToken } from "../../utils/verifyUser.js";
+import { updateUser } from "../controllers/user.controller.js";
+import { verifyAccessToken } from "../../utils/verifyUser.js";
 
 export const userRoute = express.Router();
 
-userRoute.post("/update/:id", verifyToken, updateUserInfo);
+userRoute.post("/updateUserInfo/:id", verifyAccessToken, updateUser);

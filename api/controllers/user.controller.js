@@ -1,19 +1,19 @@
 import userModel from "../models/auth.model.js";
 import bcryptjs from "bcryptjs";
 
-export const updateUserInfo = async (req, res, next) => {
-  if (req.user.id !== req.params.id) {
+export const updateUser = async (req, res, next) => {
+  if (req.user.userId !== req.params.id) {
     return res
       .status(401)
-      .json({ message: "You can only update your own account!" });
+      .json({ message: "you can update yor account only!" });
   }
 
   try {
     if (req.body.password) {
-      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+      req.body.password = bcryptjs.hashSync(req.body.password, 12);
     }
 
-    const updatedUser = await userModel.findByIdAndUpdate(
+    const updateUser = await userModel.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
@@ -26,24 +26,23 @@ export const updateUserInfo = async (req, res, next) => {
       { new: true, runValidators: true }
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+    if (!updateUser) {
+      return res.status(404).json({ message: "user not found" });
     }
 
     const userResponse = {
-      userName: updatedUser.userName,
-      email: updatedUser.email,
-      avatar: updatedUser.avatar,
+      _id: updateUser._id,
+      userName: updateUser.userName,
+      email: updateUser.email,
+      avatar: updateUser.avatar,
     };
 
     return res.status(200).json({
-      message: "User Updated Successfully",
+      message: "user updated successfully",
       updatedUser: userResponse,
     });
   } catch (error) {
     console.log(error);
-    return res
-      .status(500)
-      .json({ message: "Error in Updating User Info, Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
