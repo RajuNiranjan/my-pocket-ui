@@ -42,7 +42,7 @@ const NavBar = () => {
               alt="user"
               className={`${
                 path.pathname === "/profile" ? "border border-white " : ""
-              } w-7 h-7 rounded-full transition-all duration-300`}
+              } w-7 h-7 object-cover rounded-full transition-all duration-300`}
             />
           </Link>
         ) : (

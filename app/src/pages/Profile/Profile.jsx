@@ -15,7 +15,7 @@ import {
 import { app } from "../../fire_base";
 
 const Profile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileUploader = useRef(null);
   const [profileFormData, setProfileFormData] = useState({
     avatar: currentUser?.user?.avatar || "",
@@ -71,20 +71,17 @@ const Profile = () => {
     e.preventDefault();
     dispatch(updateUserStart());
     try {
-      const userId = currentUser._id;
+      const userId = currentUser?.user?._id;
       const res = await axios.post(
         `/api/user/updateUserInfo/${userId}`,
         profileFormData
       );
 
       const data = res.data;
-
       dispatch(updateUserSuccess(data));
-
-      console.log(profileFormData);
     } catch (error) {
-      console.log("Error updating profile:", error);
-      dispatch(updateUserFailure(error?.response?.data.message));
+      console.log(error);
+      dispatch(updateUserFailure(error.response?.data?.message));
     }
   };
 
@@ -147,10 +144,11 @@ const Profile = () => {
             value={profileFormData.password}
             onChange={onInputChange}
           />
+          {error && <p className="text-red-500">{error}</p>}
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
-            Update Information
+            {loading ? "Loading..." : "Update Information"}
           </button>
           <button
             type="button"
