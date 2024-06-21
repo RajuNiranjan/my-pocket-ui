@@ -99,6 +99,21 @@ const Profile = () => {
     }
   };
 
+  const handleSignOutAccount = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios("/api/auth/sign-out");
+      const data = res.data;
+      if (data.success === false) {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(updateUserFailure(error.response?.data.message));
+    }
+  };
+
   return (
     <div className="flex justify-center items-center my-24">
       <div className="flex flex-col gap-5">
@@ -176,7 +191,11 @@ const Profile = () => {
             className="text-red-500 cursor-pointer">
             Delete Account
           </span>
-          <span className="text-red-500 cursor-pointer">Logout</span>
+          <span
+            onClick={handleSignOutAccount}
+            className="text-red-500 cursor-pointer">
+            Logout
+          </span>
         </div>
       </div>
     </div>
