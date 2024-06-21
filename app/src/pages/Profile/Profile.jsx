@@ -85,6 +85,20 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
+    try {
+      const userID = currentUser.user._id;
+      const res = await axios.delete(`/api/user/deleteUser/${userID}`);
+      const data = res.data;
+      dispatch(updateUserSuccess(data));
+      dispatch(updateUserStart());
+    } catch (error) {
+      console.log(error);
+      dispatch(updateUserFailure(error.response?.data.message));
+    }
+  };
+
   return (
     <div className="flex justify-center items-center my-24">
       <div className="flex flex-col gap-5">
@@ -157,7 +171,11 @@ const Profile = () => {
           </button>
         </form>
         <div className="flex justify-between">
-          <span className="text-red-500 cursor-pointer">Delete Account</span>
+          <span
+            onClick={handleDeleteAccount}
+            className="text-red-500 cursor-pointer">
+            Delete Account
+          </span>
           <span className="text-red-500 cursor-pointer">Logout</span>
         </div>
       </div>
