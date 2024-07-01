@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   updateUserFailure,
   updateUserStart,
@@ -17,6 +18,7 @@ import { app } from "../../fire_base";
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileUploader = useRef(null);
+  const navigate = useNavigate();
   const [profileFormData, setProfileFormData] = useState({
     avatar: currentUser?.user?.avatar || "",
     userName: currentUser?.user?.userName || "",
@@ -91,6 +93,7 @@ const Profile = () => {
       const userID = currentUser.user._id;
       const res = await axios.delete(`/api/user/deleteUser/${userID}`);
       const data = res.data;
+      navigate("/sign_in");
       dispatch(updateUserSuccess(data));
       dispatch(updateUserStart());
     } catch (error) {
@@ -105,6 +108,9 @@ const Profile = () => {
     try {
       const res = await axios("/api/auth/sign-out");
       const data = res.data;
+      localStorage.clear();
+      navigate("/sign_in");
+
       if (data.success === false) {
         return;
       }
