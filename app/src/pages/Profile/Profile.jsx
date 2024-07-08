@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   updateUserFailure,
   updateUserStart,
@@ -185,11 +185,12 @@ const Profile = () => {
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
             {loading ? "Loading..." : "Update Information"}
           </button>
-          <button
+          <Link
+            to="/listings"
             type="button"
-            className="bg-gray-500 hover:bg-gray-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
+            className="bg-gray-500 text-center hover:bg-gray-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
             Create Listing
-          </button>
+          </Link>
         </form>
         <div className="flex justify-between">
           <span

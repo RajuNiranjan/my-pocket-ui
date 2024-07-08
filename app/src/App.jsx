@@ -12,6 +12,7 @@ import Profile from "./pages/Profile/Profile";
 import NavBar from "./components/NavBar/NavBar";
 import PrivateRouter from "./components/PrivateRoute/PrivateRouter";
 import PublicRoute from "./components/PublicRouter/PublicRouter";
+import Listings from "./pages/Listings/Listings";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route element={<PrivateRouter />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/listings" element={<Listings />} />
         </Route>
 
         {/* INCORRECT ROUTER REDIRECTION */}

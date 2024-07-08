@@ -4,7 +4,7 @@ export const verifyAccessToken = (req, res, next) => {
   try {
     const token = req.cookies.token;
     if (!token) {
-      return res.status(401).json({ message: "Unautherised" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     jwt.verify(token, process.env.SECRET_KEY, (error, user) => {
@@ -15,7 +15,7 @@ export const verifyAccessToken = (req, res, next) => {
       next();
     });
   } catch (error) {
-    console.log(error);
+    console.error("Token verification error:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
