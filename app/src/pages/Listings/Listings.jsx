@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
 const Listings = () => {
   const [formData, setFormData] = useState({
@@ -8,13 +9,15 @@ const Listings = () => {
     address: "",
     sell: false,
     rent: false,
-    parkingSpot: false,
-    furnished: false,
+    parking: false,
+    furnitured: false,
     offer: false,
-    bedrooms: "",
-    bathrooms: "",
+    bedRooms: "",
+    bathRooms: "",
     regularPrice: "",
     discountPrice: "",
+    userRef: "", // Add userRef field if required by your schema
+    type: "", // Add type field if required by your schema
   });
 
   const handleChange = (e) => {
@@ -27,25 +30,27 @@ const Listings = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length > 6) {
-      alert("You can only upload a maximum of 6 images");
-      return;
-    }
     setFormData((prevFormData) => ({
       ...prevFormData,
       images: files,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Add your form submission logic here
+
+    try {
+      const res = await axios.post("/api/listing/create", formData);
+      const data = res.data;
+      console.log("listing data", data);
+    } catch (error) {
+      console.error("Error creating listing:", error.response.data);
+    }
   };
 
   return (
     <main>
-      <h1 className="text-center text-xl font-bold">Crate Listings</h1>
+      <h1 className="text-center text-xl font-bold">Create Listings</h1>
 
       {/* LEFT  */}
       <form className="grid grid-cols-2 p-5" onSubmit={handleSubmit}>
@@ -97,21 +102,19 @@ const Listings = () => {
           {/* CHECKBOX */}
 
           <div className="flex flex-wrap gap-4">
-            {["sell", "rent", "parkingSpot", "furnished", "offer"].map(
-              (field) => (
-                <div key={field} className="flex gap-1 items-center">
-                  <input
-                    type="checkbox"
-                    name={field}
-                    id={field}
-                    className="w-5 h-7"
-                    checked={formData[field]}
-                    onChange={handleChange}
-                  />
-                  <span>{field.charAt(0).toUpperCase() + field.slice(1)}</span>
-                </div>
-              )
-            )}
+            {["sell", "rent", "parking", "furnitured", "offer"].map((field) => (
+              <div key={field} className="flex gap-1 items-center">
+                <input
+                  type="checkbox"
+                  name={field}
+                  id={field}
+                  className="w-5 h-7"
+                  checked={formData[field]}
+                  onChange={handleChange}
+                />
+                <span>{field.charAt(0).toUpperCase() + field.slice(1)}</span>
+              </div>
+            ))}
           </div>
 
           <div className="flex flex-col gap-4">
@@ -119,10 +122,10 @@ const Listings = () => {
               <div className="flex gap-2 items-center">
                 <input
                   type="text"
-                  name="bedrooms"
-                  id="bedrooms"
+                  name="bedRooms"
+                  id="bedRooms"
                   className="focus:outline-none w-14 text-center rounded-md border border-black p-1"
-                  value={formData.bedrooms}
+                  value={formData.bedRooms}
                   onChange={handleChange}
                 />
                 <p>Bed Rooms</p>
@@ -130,10 +133,10 @@ const Listings = () => {
               <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  name="bathrooms"
-                  id="bathrooms"
+                  name="bathRooms"
+                  id="bathRooms"
                   className="focus:outline-none w-14 text-center rounded-md border border-black p-1"
-                  value={formData.bathrooms}
+                  value={formData.bathRooms}
                   onChange={handleChange}
                 />
                 <p>Bath Rooms</p>
