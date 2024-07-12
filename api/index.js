@@ -5,7 +5,7 @@ import cors from "cors";
 import authRouter from "./routers/auth.router.js";
 import { userRoute } from "./routers/user.router.js";
 import cookieParser from "cookie-parser";
-import { listingRouter } from "./routers/listing.route.js";
+
 dotenv.config();
 
 const PORT = process.env.PORT_NUMBER || 3000;
@@ -25,4 +25,3 @@ app.listen(PORT, () => console.log(`server runnig at port number ${PORT}`));
 
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRouter);
-app.use("/api/listing", listingRouter);
