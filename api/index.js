@@ -25,5 +25,3 @@ app.listen(PORT, () => console.log(`server runnig at port number ${PORT}`));
 
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRouter);
-
-console.log("hello");
