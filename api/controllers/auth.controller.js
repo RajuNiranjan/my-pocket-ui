@@ -23,7 +23,7 @@ export const signUp = async (req, res, next) => {
       process.env.SECRET_KEY
     );
     await newUser.save();
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("jwt", token, { httpOnly: true });
     const userResponse = {
       _id: newUser._id,
       userName: newUser.userName,
@@ -67,7 +67,7 @@ export const signIn = async (req, res, next) => {
       process.env.SECRET_KEY
     );
 
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("jwt", token, { httpOnly: true });
 
     const userResponse = {
       _id: user._id,
@@ -105,7 +105,7 @@ export const googleAuth = async (req, res, next) => {
       };
 
       return res
-        .cookie("token", token, { httpOnly: true })
+        .cookie("jwt", token, { httpOnly: true })
         .status(200)
         .json({ message: "User Sign In Successfully", user: userResponse });
     }
@@ -132,7 +132,7 @@ export const googleAuth = async (req, res, next) => {
     };
 
     return res
-      .cookie("token", token, { httpOnly: true })
+      .cookie("jwt", token, { httpOnly: true })
       .json({ message: "User Sign Up Successfully", user: userResponse });
   } catch (error) {
     console.log(error);
@@ -144,7 +144,7 @@ export const googleAuth = async (req, res, next) => {
 
 export const signOut = async (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("jwt");
     return res
       .status(200)
       .json({ message: "User has been signed out successfully" });

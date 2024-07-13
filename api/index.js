@@ -24,6 +24,10 @@ app.use(cookieParser());
 
 app.listen(PORT, () => console.log(`server runnig at port number ${PORT}`));
 
+app.get("/", (req, res) => {
+  res.send("server is running");
+});
+
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRouter);
-app.use("/app/listings", listingRoute);
+app.use("/api/listings", listingRoute);
