@@ -1,11 +1,4 @@
 import { useState } from "react";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import { app } from "../../fire_base";
 import axios from "axios";
 
 const Listings = () => {
@@ -25,58 +18,53 @@ const Listings = () => {
     images: [],
   });
 
+  const [errors, setErrors] = useState({});
+
   const onChangeListingInput = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
     setListingFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : type === "file" ? files : value,
     }));
-  };
-
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-      },
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setListingFormData((prev) => ({
-            ...prev,
-            images: [...prev.images, downloadURL],
-          }));
-          console.log("File available at", downloadURL);
-        });
-      }
-    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data:", listingFormData);
-    const res = await axios.post(
-      "/api/listings/createListing",
-      listingFormData
-    );
-    const data = res.data;
-    console.log("listing data", data);
+    let currentErrors = {};
+
+    // Check required fields
+    [
+      "name",
+      "description",
+      "address",
+      "bedRooms",
+      "bathRooms",
+      "regularPrice",
+      "discountPrice",
+    ].forEach((field) => {
+      if (!listingFormData[field]) {
+        currentErrors[field] = true;
+      }
+    });
+
+    setErrors(currentErrors);
+
+    if (Object.keys(currentErrors).length > 0) return;
+
+    try {
+      const res = await axios.post(
+        "/api/listings/createListing",
+        listingFormData
+      );
+      const data = res.data;
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <div>
+    <div className="p-10">
       <h1 className="text-3xl font-bold text-center my-7">Create Listing</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-wrap gap-4">
@@ -87,7 +75,9 @@ const Listings = () => {
               name="name"
               id="name"
               placeholder="Name"
-              className="border border-black rounded-lg p-3"
+              className={`border ${
+                errors.name ? "border-red-500" : "border-black"
+              } rounded-lg p-3`}
               value={listingFormData.name}
               onChange={onChangeListingInput}
               required
@@ -96,7 +86,9 @@ const Listings = () => {
               name="description"
               id="description"
               placeholder="Description"
-              className="border border-black rounded-lg p-3 resize-none"
+              className={`border ${
+                errors.description ? "border-red-500" : "border-black"
+              } rounded-lg p-3 resize-none`}
               value={listingFormData.description}
               onChange={onChangeListingInput}
               required
@@ -106,7 +98,9 @@ const Listings = () => {
               name="address"
               id="address"
               placeholder="Address"
-              className="border border-black rounded-lg p-3"
+              className={`border ${
+                errors.address ? "border-red-500" : "border-black"
+              } rounded-lg p-3`}
               value={listingFormData.address}
               onChange={onChangeListingInput}
               required
@@ -136,7 +130,9 @@ const Listings = () => {
                   id="bedRooms"
                   min={1}
                   max={10}
-                  className="border border-black rounded-lg w-14 p-2"
+                  className={`border ${
+                    errors.bedRooms ? "border-red-500" : "border-black"
+                  } rounded-lg w-14 p-2`}
                   value={listingFormData.bedRooms}
                   onChange={onChangeListingInput}
                 />
@@ -149,7 +145,9 @@ const Listings = () => {
                   id="bathRooms"
                   min={1}
                   max={10}
-                  className="border border-black rounded-lg w-14 p-2"
+                  className={`border ${
+                    errors.bathRooms ? "border-red-500" : "border-black"
+                  } rounded-lg w-14 p-2`}
                   value={listingFormData.bathRooms}
                   onChange={onChangeListingInput}
                   required
@@ -161,7 +159,9 @@ const Listings = () => {
                   type="text"
                   name="regularPrice"
                   id="regularPrice"
-                  className="border border-black rounded-lg w-32 p-2"
+                  className={`border ${
+                    errors.regularPrice ? "border-red-500" : "border-black"
+                  } rounded-lg w-32 p-2`}
                   value={listingFormData.regularPrice}
                   onChange={onChangeListingInput}
                   required
@@ -173,7 +173,9 @@ const Listings = () => {
                   type="text"
                   name="discountPrice"
                   id="discountPrice"
-                  className="border border-black rounded-lg w-32 p-2"
+                  className={`border ${
+                    errors.discountPrice ? "border-red-500" : "border-black"
+                  } rounded-lg w-32 p-2`}
                   value={listingFormData.discountPrice}
                   onChange={onChangeListingInput}
                   required
@@ -193,14 +195,13 @@ const Listings = () => {
                 name="images"
                 id="images"
                 accept="image/*"
-                onChange={handleImageChange}
                 multiple
+                onChange={onChangeListingInput}
               />
             </div>
             <button
               type="submit"
-              className="p-2 bg-slate-600 w-full rounded-md my-2 text-white font-bold tracking-wider"
-            >
+              className="p-2 bg-slate-600 w-full rounded-md my-2 text-white font-bold tracking-wider">
               CREATE LISTING
             </button>
           </div>
