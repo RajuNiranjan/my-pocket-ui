@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,16 +19,31 @@ const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileUploader = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [profileFormData, setProfileFormData] = useState({
     avatar: currentUser?.user?.avatar || "",
     userName: currentUser?.user?.userName || "",
     email: currentUser?.user?.email || "",
     password: "",
   });
+
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [showListing, setShowListings] = useState(false);
+  const [listingData, setListingData] = useState([]);
+  const [listingLoading, setListingLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (currentUser) {
+      setProfileFormData({
+        avatar: currentUser.user.avatar,
+        userName: currentUser.user.userName,
+        email: currentUser.user.email,
+        password: "",
+      });
+    }
+  }, [currentUser]);
 
   const onInputChange = (e) => {
     const { id, value } = e.target;
@@ -120,10 +135,24 @@ const Profile = () => {
     }
   };
 
+  const handleShowListings = async () => {
+    setListingLoading(true);
+    try {
+      const userId = currentUser.user._id;
+      const res = await axios.get(`/api/listings/${userId}`);
+      setShowListings(!showListing);
+      setListingData(res.data.listingdata);
+      setListingLoading(false);
+    } catch (error) {
+      console.log(error);
+      setListingLoading(false);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center my-24">
       <div className="flex flex-col gap-5">
-        <h1 className="text-4xl text-center font-bold">Welcome Back </h1>
+        <h1 className="text-4xl text-center font-bold">Welcome Back</h1>
 
         <form
           onSubmit={handleSubmitProfileForm}
@@ -203,6 +232,37 @@ const Profile = () => {
             className="text-red-500 cursor-pointer">
             Logout
           </span>
+        </div>
+
+        <div className="flex flex-col gap-4 justify-center items-center">
+          <button
+            onClick={handleShowListings}
+            className="cursor-pointer font-bold hover:text-green-500 transition-all duration-500">
+            {showListing ? "Hide Listings" : "Show Listings"}
+          </button>
+
+          {listingLoading
+            ? "Loading..."
+            : showListing &&
+              listingData.map((item, index) => (
+                <div
+                  key={index}
+                  className="border w-full flex justify-between p-4 rounded-lg shadow-lg items-center ">
+                  <Link to={`/listings/${item._id}`}>
+                    <img
+                      src={item.imageUrls[0]}
+                      alt="listing cover"
+                      className="h-16 w-16 object-contain"
+                    />
+                  </Link>
+
+                  <Link to={`/listings/${item._id}`}>{item.name}</Link>
+                  <div>
+                    <h1 className="text-red-500 cursor-pointer">Delete</h1>
+                    <h1 className="text-green-500 cursor-pointer">Edit</h1>
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
     </div>
