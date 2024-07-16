@@ -341,8 +341,7 @@ const Listings = () => {
                 <button
                   type="button"
                   onClick={handleUploadImage}
-                  className="bg-green-500 text-white p-1 rounded-lg"
-                >
+                  className="bg-green-500 text-white p-1 rounded-lg">
                   {uploading ? "Uploading..." : "Upload"}
                 </button>
               </div>
@@ -353,8 +352,7 @@ const Listings = () => {
                 listingFormData.imageUrls.map((url, index) => (
                   <div
                     key={index}
-                    className="flex justify-between p-3 border items-center"
-                  >
+                    className="flex justify-between p-3 border items-center">
                     <img
                       src={url}
                       alt="listing image"
@@ -363,8 +361,7 @@ const Listings = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
-                    >
+                      className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75">
                       Delete
                     </button>
                   </div>
@@ -373,8 +370,7 @@ const Listings = () => {
           </div>
           <button
             type="submit"
-            className="bg-gray-600 w-full p-3 rounded-lg text-white font-bold"
-          >
+            className="bg-gray-600 w-full p-3 rounded-lg text-white font-bold">
             {loading ? "Creating..." : "Create listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
