@@ -149,6 +149,22 @@ const Profile = () => {
     }
   };
 
+  const deleteListing = async (listingId) => {
+    try {
+      const res = await axios.delete(
+        `/api/listings/deleteListing/${listingId}`
+      );
+      const data = res.data;
+
+      setListingData((prevListings) =>
+        prevListings.filter((listing) => listing._id !== listingId)
+      );
+      console.log("Listing deleted successfully", data);
+    } catch (error) {
+      console.log("Error deleting listing", error);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center my-24">
       <div className="flex flex-col gap-5">
@@ -258,7 +274,11 @@ const Profile = () => {
 
                   <Link to={`/listings/${item._id}`}>{item.name}</Link>
                   <div>
-                    <h1 className="text-red-500 cursor-pointer">Delete</h1>
+                    <h1
+                      onClick={() => deleteListing(item._id)}
+                      className="text-red-500 cursor-pointer">
+                      Delete
+                    </h1>
                     <h1 className="text-green-500 cursor-pointer">Edit</h1>
                   </div>
                 </div>

@@ -27,3 +27,19 @@ export const getListings = async (req, res, next) => {
     res.status(401).json({ message: "You can only View your own listings" });
   }
 };
+
+export const deleteListing = async (req, res, next) => {
+  const listing = await ListingModel.findById(req.params.id);
+
+  if (!listing) return res.status(404).json({ message: "Listing not found!" });
+
+  if (req.user.userId === listing.useRef) {
+    try {
+      await ListingModel.findByIdAndDelete(req.params.id);
+      res.status(200).json({ message: "Listing deleted Successfully!" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
