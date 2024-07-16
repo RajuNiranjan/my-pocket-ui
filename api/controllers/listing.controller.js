@@ -43,3 +43,25 @@ export const deleteListing = async (req, res, next) => {
     }
   }
 };
+
+export const updateListing = async (req, res, next) => {
+  const listing = await ListingModel.findById(req.params.id);
+  if (!listing) {
+    return res.status(404).json({ message: "Listing not found!" });
+  }
+  try {
+    const updateListing = await ListingModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Listing Updated Successfully",
+      updatedListing: updateListing,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
