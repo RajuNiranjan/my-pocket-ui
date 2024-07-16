@@ -17,7 +17,7 @@ const Listings = () => {
     name: "",
     description: "",
     address: "",
-    regularPrice: 1000,
+    regularPrice: 5000,
     discountPrice: 500,
     bathRooms: 1,
     bedRooms: 1,
@@ -140,8 +140,22 @@ const Listings = () => {
       const data = res.data;
       setLoading(false);
       setError(false);
-      console.log("data", data);
-      console.log("listing form data", listingFormData);
+
+      setListingFormData({
+        name: "",
+        description: "",
+        address: "",
+        regularPrice: 5000,
+        discountPrice: 500,
+        bathRooms: 1,
+        bedRooms: 1,
+        furnitured: false,
+        parking: false,
+        type: "rent",
+        offer: false,
+        imageUrls: [],
+        useRef: currentUser.user._id,
+      });
     } catch (error) {
       console.log(error);
       setLoading(false);
