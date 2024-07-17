@@ -65,3 +65,15 @@ export const updateListing = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getListignId = async (req, res, next) => {
+  try {
+    const listing = await ListingModel.findById(req.params.id);
+    if (listing) {
+      return res.status(200).json({ listing: listing });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
