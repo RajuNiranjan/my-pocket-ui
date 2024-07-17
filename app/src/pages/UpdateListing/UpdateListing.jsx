@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   getDownloadURL,
@@ -8,10 +8,10 @@ import {
 } from "firebase/storage";
 import { app } from "../../fire_base";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-const Listings = () => {
+const UpdateListing = () => {
   const { currentUser } = useSelector((state) => state.user);
-
   const [files, setFiles] = useState([]);
   const [listingFormData, setListingFormData] = useState({
     name: "",
@@ -33,6 +33,10 @@ const Listings = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { listing } = listingFormData;
+
+  const { id } = useParams();
 
   const handleUploadImage = () => {
     if (
@@ -163,10 +167,19 @@ const Listings = () => {
     }
   };
 
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await axios.get(`/api/listings/getListing/${id}`);
+      const data = res.data;
+      setListingFormData(data);
+    };
+    fetch();
+  }, [id]);
+
   return (
     <div>
       <div className="p-5">
-        <h1 className="text-xl font-bold text-center">Create Listing</h1>
+        <h1 className="text-xl font-bold text-center">Update Listing</h1>
         {/* LISTING FORM */}
         <form onSubmit={handleSubmitListingForm}>
           <div className="flex  flex-wrap gap-4 my-5">
@@ -349,8 +362,8 @@ const Listings = () => {
               <p className="text-red-700 text-sm">
                 {imageUploadError && imageUploadError}
               </p>
-              {listingFormData.imageUrls.length > 0 &&
-                listingFormData.imageUrls.map((url, index) => (
+              {listing?.imageUrls.length > 0 &&
+                listing?.imageUrls.map((url, index) => (
                   <div
                     key={index}
                     className="flex justify-between p-3 border items-center"
@@ -375,7 +388,7 @@ const Listings = () => {
             type="submit"
             className="bg-gray-600 w-full p-3 rounded-lg text-white font-bold"
           >
-            {loading ? "Creating..." : "Create listing"}
+            {loading ? "Updating..." : "Update listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </form>
@@ -384,4 +397,4 @@ const Listings = () => {
   );
 };
 
-export default Listings;
+export default UpdateListing;

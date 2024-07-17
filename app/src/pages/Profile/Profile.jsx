@@ -172,7 +172,8 @@ const Profile = () => {
 
         <form
           onSubmit={handleSubmitProfileForm}
-          className="flex gap-4 justify-center flex-col w-[450px]">
+          className="flex gap-4 justify-center flex-col w-[450px]"
+        >
           <input
             type="file"
             hidden
@@ -227,25 +228,29 @@ const Profile = () => {
           {error && <p className="text-red-500">{error}</p>}
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
+            className="bg-blue-500 hover:bg-blue-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300"
+          >
             {loading ? "Loading..." : "Update Information"}
           </button>
           <Link
             to="/listings"
             type="button"
-            className="bg-gray-500 text-center hover:bg-gray-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300">
+            className="bg-gray-500 text-center hover:bg-gray-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300"
+          >
             Create Listing
           </Link>
         </form>
         <div className="flex justify-between">
           <span
             onClick={handleDeleteAccount}
-            className="text-red-500 cursor-pointer">
+            className="text-red-500 cursor-pointer"
+          >
             Delete Account
           </span>
           <span
             onClick={handleSignOutAccount}
-            className="text-red-500 cursor-pointer">
+            className="text-red-500 cursor-pointer"
+          >
             Logout
           </span>
         </div>
@@ -253,7 +258,8 @@ const Profile = () => {
         <div className="flex flex-col gap-4 justify-center items-center">
           <button
             onClick={handleShowListings}
-            className="cursor-pointer font-bold hover:text-green-500 transition-all duration-500">
+            className="cursor-pointer font-bold hover:text-green-500 transition-all duration-500"
+          >
             {showListing ? "Hide Listings" : "Show Listings"}
           </button>
 
@@ -263,7 +269,8 @@ const Profile = () => {
               listingData.map((item, index) => (
                 <div
                   key={index}
-                  className="border w-full flex justify-between p-4 rounded-lg shadow-lg items-center ">
+                  className="border w-full flex justify-between p-4 rounded-lg shadow-lg items-center "
+                >
                   <Link to={`/listings/${item._id}`}>
                     <img
                       src={item.imageUrls[0]}
@@ -276,10 +283,16 @@ const Profile = () => {
                   <div>
                     <h1
                       onClick={() => deleteListing(item._id)}
-                      className="text-red-500 cursor-pointer">
+                      className="text-red-500 cursor-pointer"
+                    >
                       Delete
                     </h1>
-                    <h1 className="text-green-500 cursor-pointer">Edit</h1>
+                    <Link
+                      to={`/update-listings/${item._id}`}
+                      className="text-green-500 cursor-pointer"
+                    >
+                      Edit
+                    </Link>
                   </div>
                 </div>
               ))}

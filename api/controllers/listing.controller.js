@@ -69,8 +69,9 @@ export const updateListing = async (req, res, next) => {
 export const getListignId = async (req, res, next) => {
   try {
     const listing = await ListingModel.findById(req.params.id);
+    if (!listing) return res.status(401).json({ message: "You can only see your listings" })
     if (listing) {
-      return res.status(200).json({ listing: listing });
+      return res.status(200).json({ listing });
     }
   } catch (error) {
     console.log(error);
