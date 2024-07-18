@@ -12,6 +12,9 @@ import { useParams } from "react-router-dom";
 
 const UpdateListing = () => {
   const { currentUser } = useSelector((state) => state.user);
+
+  const { id } = useParams();
+
   const [files, setFiles] = useState([]);
   const [listingFormData, setListingFormData] = useState({
     name: "",
@@ -33,10 +36,6 @@ const UpdateListing = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { listing } = listingFormData;
-
-  const { id } = useParams();
 
   const handleUploadImage = () => {
     if (
@@ -169,9 +168,13 @@ const UpdateListing = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await axios.get(`/api/listings/getListing/${id}`);
-      const data = res.data;
-      setListingFormData(data);
+      try {
+        const res = await axios.get(`/api/listings/getListing/${id}`);
+        const data = res.data;
+        setListingFormData(data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetch();
   }, [id]);
@@ -179,7 +182,7 @@ const UpdateListing = () => {
   return (
     <div>
       <div className="p-5">
-        <h1 className="text-xl font-bold text-center">Update Listing</h1>
+        <h1 className="text-xl font-bold text-center">Create Listing</h1>
         {/* LISTING FORM */}
         <form onSubmit={handleSubmitListingForm}>
           <div className="flex  flex-wrap gap-4 my-5">
@@ -362,8 +365,8 @@ const UpdateListing = () => {
               <p className="text-red-700 text-sm">
                 {imageUploadError && imageUploadError}
               </p>
-              {listing?.imageUrls.length > 0 &&
-                listing?.imageUrls.map((url, index) => (
+              {listingFormData.imageUrls.length > 0 &&
+                listingFormData.imageUrls.map((url, index) => (
                   <div
                     key={index}
                     className="flex justify-between p-3 border items-center"
@@ -388,7 +391,7 @@ const UpdateListing = () => {
             type="submit"
             className="bg-gray-600 w-full p-3 rounded-lg text-white font-bold"
           >
-            {loading ? "Updating..." : "Update listing"}
+            {loading ? "Creating..." : "Create listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </form>
