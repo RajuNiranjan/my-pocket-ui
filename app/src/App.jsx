@@ -12,7 +12,7 @@ import Profile from "./pages/Profile/Profile";
 import NavBar from "./components/NavBar/NavBar";
 import PrivateRouter from "./components/PrivateRoute/PrivateRouter";
 import PublicRoute from "./components/PublicRouter/PublicRouter";
-import Listings from "./pages/Listings/Listings";
+import CreateListings from "./pages/CrateListings/CreateListings";
 import UPdateListing from "./pages/UpdateListing/UpdateListing";
 
 const App = () => {
@@ -30,7 +30,7 @@ const App = () => {
         <Route element={<PrivateRouter />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/listings" element={<Listings />} />
+          <Route path="/create-listings" element={<CreateListings />} />
           <Route path="/update-listings/:id" element={<UPdateListing />} />
         </Route>
 

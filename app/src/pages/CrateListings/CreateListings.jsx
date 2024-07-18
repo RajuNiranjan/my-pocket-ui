@@ -9,7 +9,7 @@ import {
 import { app } from "../../fire_base";
 import { useSelector } from "react-redux";
 
-const Listings = () => {
+const CreateListings = () => {
   const { currentUser } = useSelector((state) => state.user);
 
   const [files, setFiles] = useState([]);
@@ -384,4 +384,4 @@ const Listings = () => {
   );
 };
 
-export default Listings;
+export default CreateListings;

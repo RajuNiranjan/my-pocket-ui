@@ -233,7 +233,7 @@ const Profile = () => {
             {loading ? "Loading..." : "Update Information"}
           </button>
           <Link
-            to="/listings"
+            to="/create-listings"
             type="button"
             className="bg-gray-500 text-center hover:bg-gray-600 text-white font-medium text-lg cursor-pointer rounded-md p-2 transition-all duration-300"
           >
