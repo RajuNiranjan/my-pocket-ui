@@ -6,7 +6,7 @@ const NavBar = () => {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <nav className="h-14 bg-gray-500 flex  items-center justify-between px-10">
+    <nav className="h-14 bg-gray-500 flex  items-center justify-between px-10 sticky top-0 z-50">
       <div>
         <Link to="/">
           <h1 className="font-semibold text-[22px]">
