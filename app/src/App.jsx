@@ -14,6 +14,7 @@ import PrivateRouter from "./components/PrivateRoute/PrivateRouter";
 import PublicRoute from "./components/PublicRouter/PublicRouter";
 import CreateListings from "./pages/CrateListings/CreateListings";
 import UPdateListing from "./pages/UpdateListing/UpdateListing";
+import Listings from "./pages/Listings/Listings";
 
 const App = () => {
   return (
@@ -39,6 +40,8 @@ const App = () => {
 
         {/* NORMAL ROUTER */}
         <Route path="/about" element={<About />} />
+        <Route path="/listings" element={<Listings />} />
+        <Route path="/listings/:id" element={<Listings />} />
       </Routes>
     </Router>
   );
