@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaBed } from "react-icons/fa";
 import { FaBath } from "react-icons/fa";
 import { FaParking } from "react-icons/fa";
 import { FaChair } from "react-icons/fa";
+import { FaShare } from "react-icons/fa";
 
 const Listings = () => {
   const { id } = useParams();
@@ -50,6 +51,12 @@ const Listings = () => {
           alt="listing_image"
           className="w-full h-full "
         />
+
+        <Link
+          to="/"
+          className="absolute top-32  right-20 w-10 h-10 flex justify-center items-center text-2xl rounded-full bg-white">
+          <FaShare />
+        </Link>
 
         <div className="absolute bottom-52 text-white">
           <div className="container mx-10 my-10 flex flex-col gap-4 ">
