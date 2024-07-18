@@ -136,29 +136,13 @@ const UpdateListing = () => {
     setLoading(true);
     setError(false);
     try {
-      const res = await axios.post(
-        "/api/listings/createListing",
+      const res = await axios.patch(
+        `/api/listings/updateListing/${id}`,
         listingFormData
       );
       const data = res.data;
       setLoading(false);
       setError(false);
-
-      setListingFormData({
-        name: "",
-        description: "",
-        address: "",
-        regularPrice: 5000,
-        discountPrice: 500,
-        bathRooms: 1,
-        bedRooms: 1,
-        furnitured: false,
-        parking: false,
-        type: "rent",
-        offer: false,
-        imageUrls: [],
-        useRef: currentUser.user._id,
-      });
     } catch (error) {
       console.log(error);
       setLoading(false);
