@@ -7,15 +7,19 @@ import { FaBath } from "react-icons/fa";
 import { FaParking } from "react-icons/fa";
 import { FaChair } from "react-icons/fa";
 import { FaShare } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+import { useSelector } from "react-redux";
+import { Navigation } from "swiper/modules";
+import "swiper/css/bundle";
 
 const Listings = () => {
+  SwiperCore.use([Navigation]);
   const { id } = useParams();
-
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  console.log(listing);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -45,20 +49,42 @@ const Listings = () => {
 
   return (
     <div>
-      <div className="relative">
-        <img
-          src={listing?.imageUrls[0]}
-          alt="listing_image"
-          className="w-full h-full "
-        />
+      <div>
+        <Swiper navigation>
+          {listing.imageUrls.map((url) => (
+            <SwiperSlide key={url}>
+              <div
+                className="h-[550px]"
+                style={{
+                  background: `url(${url}) center no-repeat`,
+                  backgroundSize: "cover",
+                }}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        <div className="fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer">
+          <FaShare
+            className="text-slate-500"
+            onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              setCopied(true);
+              setTimeout(() => {
+                setCopied(false);
+              }, 2000);
+            }}
+          />
+        </div>
 
         <Link
           to="/"
-          className="absolute top-32  right-20 w-10 h-10 flex justify-center items-center text-2xl rounded-full bg-white">
+          className="right-20 w-10 h-10 flex justify-center items-center text-2xl rounded-full bg-black text-white"
+        >
           <FaShare />
         </Link>
 
-        <div className="absolute bottom-52 text-white">
+        <div>
           <div className="container mx-10 my-10 flex flex-col gap-4 ">
             <h1 className="text-6xl font-bold">{listing.name}</h1>
             <div className="flex gap-2 items-center">
