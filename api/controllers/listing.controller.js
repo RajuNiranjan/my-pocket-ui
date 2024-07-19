@@ -78,3 +78,14 @@ export const getListignId = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getAllListings = async (req, res, next) => {
+  try {
+    const allListings = await ListingModel.find()
+    return res.status(200).json({ allListings: allListings })
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({ message: "Internal server error" })
+  }
+}

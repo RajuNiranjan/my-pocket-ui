@@ -86,7 +86,10 @@ const Listings = () => {
 
         <div>
           <div className="container mx-10 my-10 flex flex-col gap-4 ">
-            <h1 className="text-6xl font-bold">{listing.name}</h1>
+            <h1 className="text-6xl flex gap-2 flex-col font-bold">
+              {listing.name}{" "}
+              <span className="text-4xl">{`$ ${listing.regularPrice} - $ ${listing.discountPrice} / month`}</span>
+            </h1>
             <div className="flex gap-2 items-center">
               <FaLocationDot className="text-green-600" />
               <h1 className="capitalize">{listing.address}</h1>
