@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     // origin: "http://localhost:5173",
-    origin: "https://express-react-frontend-flame.vercel.app",
+    origin: "https://express-react-frontend-flame.vercel.app/",
     credentials: true,
   })
 );
