@@ -12,13 +12,15 @@ dotenv.config();
 const PORT = process.env.PORT_NUMBER || 3000;
 const app = express();
 
-app.use(
-  cors({
-    // origin: "http://localhost:5173",
-    origin: "https://express-react-frontend-flame.vercel.app/",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     // origin: "http://localhost:5173",
+//     origin: "https://express-react-frontend-flame.vercel.app/",
+//     credentials: true,
+//   })
+// );
+
+app.use(cors())
 
 app.use(express.json());
 app.use(cookieParser());
